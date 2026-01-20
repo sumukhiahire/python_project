@@ -1,0 +1,157 @@
+{% extends 'meals/base.html' %}
+{% load meal_extras %}
+
+{% block title %}{{ meal.name }} - School Lunch Monitoring System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{ meal.name }}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'meal-update' meal.id %}" class="btn btn-sm btn-outline-primary">Edit Meal</a>
+            <a href="{% url 'meal-list' %}" class="btn btn-sm btn-outline-secondary">Back to Meals</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Meal Details Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="bi bi-info-circle me-1"></i> Meal Information
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Meal Type</dt>
+                    <dd class="col-sm-8">{{ meal.get_meal_type_display }}</dd>
+
+                    <dt class="col-sm-4">Description</dt>
+                    <dd class="col-sm-8">{{ meal.description|default:"No description available" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nutritional Information Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="bi bi-clipboard2-data me-1"></i> Nutritional Information
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Calories</h6>
+                            <p class="h4">{{ meal.calories }} <small>kcal</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Protein</h6>
+                            <p class="h4">{{ meal.protein }} <small>g</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Carbohydrates</h6>
+                            <p class="h4">{{ meal.carbohydrates }} <small>g</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Fats</h6>
+                            <p class="h4">{{ meal.fats }} <small>g</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Fiber</h6>
+                            <p class="h4">{{ meal.fiber }} <small>g</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Sodium</h6>
+                            <p class="h4">{{ meal.sodium }} <small>mg</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Sugar</h6>
+                            <p class="h4">{{ meal.sugar }} <small>g</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="nutrition-item">
+                            <h6>Iron</h6>
+                            <p class="h4">{{ meal.iron }} <small>mg</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Consumptions -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-clock-history me-1"></i> Recent Consumptions
+    </div>
+    <div class="card-body">
+        {% if meal.consumption_set.all %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>Quantity</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consumption in meal.consumption_set.all|slice:":5" %}
+                    <tr>
+                        <td>{{ consumption.date }}</td>
+                        <td>{{ consumption.student.name }}</td>
+                        <td>{{ consumption.quantity }}</td>
+                        <td>{{ consumption.notes|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">No consumption records found for this meal.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.nutrition-item {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+.nutrition-item h6 {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.nutrition-item p {
+    margin-bottom: 0;
+}
+
+.nutrition-item small {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+</style>
+{% endblock %}

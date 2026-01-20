@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}School Lunch Monitoring System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .nav-link {
+            color: #495057;
+        }
+        .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card-dashboard {
+            border-left: 4px solid #0d6efd;
+            margin-bottom: 20px;
+        }
+        .card-dashboard.card-meals {
+            border-left-color: #198754;
+        }
+        .card-dashboard.card-students {
+            border-left-color: #dc3545;
+        }
+        .card-dashboard.card-consumption {
+            border-left-color: #fd7e14;
+        }
+        .card-dashboard.card-waste {
+            border-left-color: #6f42c1;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{% url 'dashboard' %}">School Lunch System</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="w-100"></div>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="{% url 'admin:index' %}">Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/meals/' %}active{% endif %}" href="{% url 'dashboard' %}">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/students/' in request.path %}active{% endif %}" href="{% url 'student-list' %}">
+                                <i class="bi bi-people me-2"></i> Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/meals/meal' in request.path %}active{% endif %}" href="{% url 'meal-list' %}">
+                                <i class="bi bi-egg-fried me-2"></i> Meals
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/consumptions/' in request.path %}active{% endif %}" href="{% url 'consumption-list' %}">
+                                <i class="bi bi-clipboard-check me-2"></i> Consumption
+                            </a>
+                        </li>
+                        <li class="nav-item">
+
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Reports</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/reports/nutrition/' in request.path %}active{% endif %}" href="{% url 'nutrition-report' %}">
+                                <i class="bi bi-bar-chart me-2"></i> Nutrition Report
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/reports/waste/' in request.path %}active{% endif %}" href="{% url 'waste-report' %}">
+                                <i class="bi bi-trash me-2"></i> Waste Report
+                            </a>
+                        </li>
+                        <li class="nav-item">
+
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

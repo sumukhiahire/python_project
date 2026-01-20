@@ -1,0 +1,78 @@
+{% extends 'meals/base.html' %}
+
+{% block title %}Record Meal Consumption - School Lunch Monitoring System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Record Meal Consumption</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'consumption-list' %}" class="btn btn-sm btn-outline-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-clipboard-plus me-1"></i> Consumption Details
+    </div>
+    <div class="card-body">
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in field.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save me-1"></i> Save Consumption Record
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize form validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+    // Add Bootstrap classes to form fields
+    document.addEventListener('DOMContentLoaded', function() {
+        const formSelects = document.querySelectorAll('select')
+        formSelects.forEach(select => {
+            select.classList.add('form-select')
+        })
+
+        const formInputs = document.querySelectorAll('input[type="number"]')
+        formInputs.forEach(input => {
+            input.classList.add('form-control')
+        })
+    })
+</script>
+{% endblock %}
